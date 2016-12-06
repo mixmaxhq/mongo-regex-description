@@ -15,8 +15,10 @@ var regex = regExpDescription.create({
 
 
 var description = regExpDescription.parse({
-	$regex: '^my value$',
-	$options: 'i'
+	$not: {
+		$regex: '^my value$',
+		$options: 'i'
+	}
 });
 // { operator: 'is not', value: 'my value' }
 
