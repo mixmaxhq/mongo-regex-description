@@ -36,4 +36,5 @@ var description = regExpDescription.parse({
 
 ## Changelog
 
+* 1.0.1 `parse()` returns null if it can't parse the query.
 * 1.0.0 Initial release
