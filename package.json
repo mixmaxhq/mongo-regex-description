@@ -1,6 +1,6 @@
 {
   "name": "mongo-regex-description",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "This creates a Mongo regex from a \"description\" (see readme for supported descriptions), and vice versa. Useful for building UX on top of regexes.",
   "main": "index.js",
   "scripts": {
