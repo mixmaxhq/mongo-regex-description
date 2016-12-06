@@ -1,8 +1,12 @@
+var supportedOperators = ['is', 'is not', 'starts with', 'ends with', 'contains', 'does not contain'];
+
 /**
  * Returns a Mongo query that can be used a value for a field, given an operator and a value.
  * See readme for supported values.
  */
 function create(operator, value) {
+  if (supportedOperators.indexOf(operator) < 0) throw new Error(`Unknown operator ${operator}`);
+
   if (operator === 'is') {
     // Assume case-insensitive
     return {
@@ -39,8 +43,6 @@ function create(operator, value) {
       $regex: `${escapeRegex(value)}$`,
       $options: 'i'
     };
-  } else {
-    throw new Error(`Unknown operator ${operator}`);
   }
 }
 
@@ -93,4 +95,4 @@ function unescapeRegex(regexStr) {
   return regexStr.replace(new RegExp(`(${escapedChars.join('|')})`, 'g'), match => match.slice(1));
 }
 
-module.exports = { create, parse };
+module.exports = { create, parse, supportedOperators };
