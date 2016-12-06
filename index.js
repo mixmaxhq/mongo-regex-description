@@ -45,7 +45,7 @@ function create(operator, value) {
 }
 
 /**
- * Reverses create() - returns an object 
+ * Reverses create() - returns an object with `operator` and `value` keys. Returns null if unrecognized query.
  */
 function parse(query) {
   if (query.$regex && matchesBeginning(query.$regex) && matchesEnd(query.$regex)) {
@@ -61,7 +61,7 @@ function parse(query) {
   } else if (query.$not) {
     return { operator: 'does not contain', value: unescapeRegex(query.$not.$regex) };
   } else {
-    throw new Error(`Unhandled type of query ${JSON.stringify(query)}`);
+    return null;
   }
 }
 

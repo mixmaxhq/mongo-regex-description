@@ -112,7 +112,7 @@ describe('mongo-regex-description', () => {
       });
 
       it('should throw for a unhandled query', () => {
-        expect(() => regexDescription.parse({})).toThrow();
+        expect(regexDescription.parse({})).toBeNull();
       });
     });
   });
