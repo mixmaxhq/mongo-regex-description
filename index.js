@@ -1,4 +1,4 @@
-var supportedOperators = ['is', 'is not', 'starts with', 'ends with', 'contains', 'does not contain'];
+var supportedOperators = ['contains', 'does not contain', 'is', 'is not', 'starts with', 'ends with'];
 
 /**
  * Returns a Mongo query that can be used a value for a field, given an operator and a value.
