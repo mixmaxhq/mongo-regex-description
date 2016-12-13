@@ -2,7 +2,7 @@
 /* globals describe, it, expect */
 /* jshint -W030 */
 
-const regexDescription = require('../..');
+const regexDescription = require('../../src');
 
 describe('mongo-regex-description', () => {
   describe('create', () => {
