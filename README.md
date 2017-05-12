@@ -2,6 +2,8 @@
 
 This library will create a Mongo-style regex from a "description" (a tuple of an operator and a value). This is useful for building UIs on top of Mongo or [Sift](https://www.npmjs.com/package/sift) `$regex` operators.
 
+Also see https://github.com/mixmaxhq/mongo-comparison-ops-description for the numerical counterpart to the library.
+
 Example:
 
 ```js
