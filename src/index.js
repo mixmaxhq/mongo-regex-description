@@ -50,17 +50,17 @@ function create(operator, value) {
  * Reverses create() - returns an object with `operator` and `value` keys. Returns null if unrecognized query.
  */
 function parse(query) {
-  if (query.$regex && matchesBeginning(query.$regex) && matchesEnd(query.$regex)) {
+  if ('$regex' in query && matchesBeginning(query.$regex) && matchesEnd(query.$regex)) {
     return { operator: 'is', value: unescapeRegex(query.$regex.slice(1, query.$regex.length - 1)) };
-  } else if (query.$not && matchesBeginning(query.$not.$regex) && matchesEnd(query.$not.$regex)) {
+  } else if ('$not' in query && matchesBeginning(query.$not.$regex) && matchesEnd(query.$not.$regex)) {
     return { operator: 'is not', value: unescapeRegex(query.$not.$regex.slice(1, query.$not.$regex.length - 1)) };
-  } else if (query.$regex && matchesBeginning(query.$regex)) {
+  } else if ('$regex' in query && matchesBeginning(query.$regex)) {
     return { operator: 'starts with', value: unescapeRegex(query.$regex.slice(1)) };
-  } else if (query.$regex && matchesEnd(query.$regex)) {
+  } else if ('$regex' in query && matchesEnd(query.$regex)) {
     return { operator: 'ends with', value: unescapeRegex(query.$regex.slice(0, query.$regex.length - 1)) };
-  } else if (query.$regex) {
+  } else if ('$regex' in query) {
     return { operator: 'contains', value: unescapeRegex(query.$regex) };
-  } else if (query.$not) {
+  } else if ('$not' in query) {
     return { operator: 'does not contain', value: unescapeRegex(query.$not.$regex) };
   } else {
     return null;

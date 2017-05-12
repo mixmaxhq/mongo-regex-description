@@ -84,6 +84,13 @@ describe('mongo-regex-description', () => {
 
     describe('special cases', () => {
       it('should work for empty strings', () => {
+        expect(regexDescription.parse({ $regex: '', $options: 'i' })).toEqual({
+          operator: 'contains',
+          value: ''
+        });
+      });
+
+      it('should work for empty exact strings', () => {
         expect(regexDescription.parse({ $regex: '^$', $options: 'i' })).toEqual({
           operator: 'is',
           value: ''
