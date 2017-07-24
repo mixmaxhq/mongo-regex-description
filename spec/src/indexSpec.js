@@ -14,6 +14,18 @@ describe('mongo-regex-description', () => {
       expect(regexDescription.create('is not', 'a$value')).toEqual({ $not: { $regex: '^a\\$value$', $options: 'i' } });
     });
 
+    it('should work for "is any of"', () => {
+      expect(regexDescription.create('is any of', ['a$value', 'b$value'])).toEqual({ $or: [
+        { $regex: '^a\\$value$', $options: 'i' },
+        { $regex: '^b\\$value$', $options: 'i' }
+        ]
+      });
+    });
+
+    it(`should throw on an improperly structured 'is any of' query`, () => {
+      expect(() => regexDescription.create('is any of', 'a$value')).toThrow();
+    });
+
     it('should work for "contains"', () => {
       expect(regexDescription.create('contains', 'a$value')).toEqual({ $regex: 'a\\$value', $options: 'i' });
     });
@@ -51,6 +63,17 @@ describe('mongo-regex-description', () => {
       expect(regexDescription.parse({ $not: { $regex: '^a\\$value$', $options: 'i' } })).toEqual({
         operator: 'is not',
         value: 'a$value'
+      });
+    });
+
+    it('should work for "is any of"', () => {
+      expect(regexDescription.parse({ $or: [
+        { $regex: '^a\\$value$', $options: 'i' },
+        { $regex: '^b\\$value$', $options: 'i' }
+        ]
+      })).toEqual({
+        operator: 'is any of',
+        value: ['a$value', 'b$value']
       });
     });
 
