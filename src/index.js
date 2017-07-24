@@ -1,4 +1,4 @@
-var supportedOperators = ['contains', 'does not contain', 'is', 'is not', 'starts with', 'ends with'];
+var supportedOperators = ['contains', 'does not contain', 'is', 'is not', 'is any of', 'starts with', 'ends with'];
 
 /**
  * Returns a Mongo query that can be used a value for a field, given an operator and a value.
@@ -20,6 +20,17 @@ function create(operator, value) {
         $regex: `^${escapeRegex(value)}$`,
         $options: 'i'
       }
+    };
+  } else if (operator === 'is any of') {
+    if (!Array.isArray(value)) throw new Error(`When called with argument 'operator' 'is any of', expected argument 'value' to be of type 'Array'.`);
+    const conditions = value.map((condition) => {
+      return ({
+        $regex: `^${escapeRegex(condition)}$`,
+        $options: 'i'
+      });
+    });
+    return {
+      $or: conditions
     };
   } else if (operator === 'contains') {
     return {
@@ -54,6 +65,11 @@ function parse(query) {
     return { operator: 'is', value: unescapeRegex(query.$regex.slice(1, query.$regex.length - 1)) };
   } else if ('$not' in query && matchesBeginning(query.$not.$regex) && matchesEnd(query.$not.$regex)) {
     return { operator: 'is not', value: unescapeRegex(query.$not.$regex.slice(1, query.$not.$regex.length - 1)) };
+  } else if ('$or' in query) {
+    return { operator: 'is any of', value: query.$or.map((condition) => {
+        return unescapeRegex(condition.$regex.slice(1, condition.$regex.length - 1));
+      })
+    };
   } else if ('$regex' in query && matchesBeginning(query.$regex)) {
     return { operator: 'starts with', value: unescapeRegex(query.$regex.slice(1)) };
   } else if ('$regex' in query && matchesEnd(query.$regex)) {

@@ -34,10 +34,12 @@ var description = regExpDescription.parse({
 * `does not contain`: Negates `contains`
 * `starts with`: Matches if `value` exists at the beginning of the string, case insensitively
 * `ends with`: Matches if `value` exists at the end of the string, case insensitively
+* `is any of`: Matches if `is` matches for any value in an array. Requires an array as `value`.
 
 
 ## Changelog
 
+* 1.3.0 Added `is any of` operator.
 * 1.2.1 Fixed issue where empty strings weren't parsed.
 * 1.2.0 Can be used in the browser (use `npm build` and consume the file `dist/browser/index.js`)
 * 1.1.1 Reordered `supportedOperators` to put more commonly used `contains` first.
