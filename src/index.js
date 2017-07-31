@@ -78,8 +78,8 @@ function matchesBeginning(regexStr) {
  * Returns true if the regex matches to the end of the string.
  */
 function matchesEnd(regexStr) {
-  // Make sure the last character isn't escaped.
-  return /[^\\]\$$/.test(regexStr);
+  // Make sure the last character isn't escaped, if there is one.
+  return /(^|[^\\])\$$/.test(regexStr);
 }
 
 // Copied from https://github.com/sindresorhus/escape-string-regexp/blob/master/index.js
