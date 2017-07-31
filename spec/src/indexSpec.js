@@ -39,6 +39,32 @@ describe('mongo-regex-description', () => {
     });
   });
 
+  describe('empty values', () => {
+    it('should work for "is"', () => {
+      expect(regexDescription.parse(regexDescription.create('is', ''))).toEqual({ operator: 'is', value: ''});
+    });
+
+    it('should work for "is not"', () => {
+      expect(regexDescription.parse(regexDescription.create('is not', ''))).toEqual({ operator: 'is not', value: ''});
+    });
+
+    it('should work for "contains"', () => {
+      expect(regexDescription.parse(regexDescription.create('contains', ''))).toEqual({ operator: 'contains', value: ''});
+    });
+
+    it('should work for "does not contain"', () => {
+      expect(regexDescription.parse(regexDescription.create('does not contain', ''))).toEqual({ operator: 'does not contain', value: ''});
+    });
+
+    it('should work for "starts with"', () => {
+      expect(regexDescription.parse(regexDescription.create('starts with', ''))).toEqual({ operator: 'starts with', value: ''});
+    });
+
+    it('should work for "ends with"', () => {
+      expect(regexDescription.parse(regexDescription.create('ends with', ''))).toEqual({ operator: 'ends with', value: ''});
+    });
+  });
+
   describe('parse', () => {
     it('should work for "is"', () => {
       expect(regexDescription.parse({ $regex: '^a\\$value$', $options: 'i' })).toEqual({
