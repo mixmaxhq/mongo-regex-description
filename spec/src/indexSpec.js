@@ -30,6 +30,14 @@ describe('mongo-regex-description', () => {
       expect(regexDescription.create('ends with', 'a$value')).toEqual({ $regex: 'a\\$value$', $options: 'i' });
     });
 
+    it('should work for "is empty"', () => {
+      expect(regexDescription.create('is empty')).toEqual({ $in: [null, ''] });      
+    });
+
+    it('should work for "is not empty"', () => {
+      expect(regexDescription.create('is not empty')).toEqual({ $exists: true, $nin: [null, ''] });
+    })
+
     it('should handle escaping regexes', () => {
       expect(regexDescription.create('is', '|\\{}()[]^$+*?.')).toEqual({ $regex: '^\\|\\\\\\{\\}\\(\\)\\[\\]\\^\\$\\+\\*\\?\\.$', $options: 'i' });
     });
@@ -41,27 +49,27 @@ describe('mongo-regex-description', () => {
 
   describe('empty values', () => {
     it('should work for "is"', () => {
-      expect(regexDescription.parse(regexDescription.create('is', ''))).toEqual({ operator: 'is', value: ''});
+      expect(regexDescription.parse(regexDescription.create('is', ''))).toEqual({ operator: 'is', value: '' });
     });
 
     it('should work for "is not"', () => {
-      expect(regexDescription.parse(regexDescription.create('is not', ''))).toEqual({ operator: 'is not', value: ''});
+      expect(regexDescription.parse(regexDescription.create('is not', ''))).toEqual({ operator: 'is not', value: '' });
     });
 
     it('should work for "contains"', () => {
-      expect(regexDescription.parse(regexDescription.create('contains', ''))).toEqual({ operator: 'contains', value: ''});
+      expect(regexDescription.parse(regexDescription.create('contains', ''))).toEqual({ operator: 'contains', value: '' });
     });
 
     it('should work for "does not contain"', () => {
-      expect(regexDescription.parse(regexDescription.create('does not contain', ''))).toEqual({ operator: 'does not contain', value: ''});
+      expect(regexDescription.parse(regexDescription.create('does not contain', ''))).toEqual({ operator: 'does not contain', value: '' });
     });
 
     it('should work for "starts with"', () => {
-      expect(regexDescription.parse(regexDescription.create('starts with', ''))).toEqual({ operator: 'starts with', value: ''});
+      expect(regexDescription.parse(regexDescription.create('starts with', ''))).toEqual({ operator: 'starts with', value: '' });
     });
 
     it('should work for "ends with"', () => {
-      expect(regexDescription.parse(regexDescription.create('ends with', ''))).toEqual({ operator: 'ends with', value: ''});
+      expect(regexDescription.parse(regexDescription.create('ends with', ''))).toEqual({ operator: 'ends with', value: '' });
     });
   });
 
@@ -105,6 +113,18 @@ describe('mongo-regex-description', () => {
       expect(regexDescription.parse({ $regex: 'a\\$value$', $options: 'i' })).toEqual({
         operator: 'ends with',
         value: 'a$value'
+      });
+    });
+
+    it('should work for "is empty"', () => {
+      expect(regexDescription.parse({ $in: [null, ''] })).toEqual({
+        operator: 'is empty'
+      });
+    });
+
+    it('should work for "is not empty"', () => {
+      expect(regexDescription.parse({ $exists: true, $nin: [null, ''] })).toEqual({
+        operator: 'is not empty'
       });
     });
 
