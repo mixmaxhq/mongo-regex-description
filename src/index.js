@@ -1,4 +1,26 @@
-var supportedOperators = ['contains', 'does not contain', 'is', 'is not', 'starts with', 'ends with'];
+var supportedOperators = ['contains', 'does not contain', 'is', 'is not', 'is empty', 'is not empty', 'starts with', 'ends with'];
+
+// { $in: [null, ''] }
+function isIsEmptyQuery(query) {
+  const keys = Object.keys(query); 
+  if (keys.length !== 1) {
+    return false;
+  }
+  const inValues = query.$in;
+  return Array.isArray(inValues) && inValues.length === 2 && 
+    inValues.indexOf(null) >= 0 && inValues.indexOf('') >= 0;
+}
+
+// { $exists: true, $nin: [null, ''] }
+function isIsNotEmptyQuery(query) {
+  const keys = Object.keys(query);  
+  if (keys.length !== 2 || !query.$exists) {
+    return false;
+  }
+  const ninValues = query.$nin;
+  return Array.isArray(ninValues) && ninValues.length === 2 && 
+    ninValues.indexOf(null) >= 0 && ninValues.indexOf('') >= 0;
+}
 
 /**
  * Returns a Mongo query that can be used a value for a field, given an operator and a value.
@@ -43,6 +65,15 @@ function create(operator, value) {
       $regex: `${escapeRegex(value)}$`,
       $options: 'i'
     };
+  } else if (operator === 'is empty') {
+    return {
+      $in: [null, '']   
+    };
+  } else if (operator === 'is not empty') {
+    return {
+      $exists: true, 
+      $nin: [null, '']
+    };
   }
 }
 
@@ -62,6 +93,10 @@ function parse(query) {
     return { operator: 'contains', value: unescapeRegex(query.$regex) };
   } else if ('$not' in query) {
     return { operator: 'does not contain', value: unescapeRegex(query.$not.$regex) };
+  } else if (isIsEmptyQuery(query)) {
+    return { operator: 'is empty' };
+  } else if (isIsNotEmptyQuery(query)) {
+    return { operator: 'is not empty' };
   } else {
     return null;
   }
