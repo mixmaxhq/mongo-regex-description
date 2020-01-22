@@ -6,10 +6,11 @@
   "browser": "dist/browser/index.js",
   "scripts": {
     "build": "[ \"$WATCH\" == 'true' ] && rollup -cw || rollup -c",
+    "ci": "npm test",
     "watch": "WATCH=true npm run build",
     "test": "JASMINE_CONFIG_PATH='spec/support/jasmine.json' jasmine",
     "prebuild": "rm -rf dist",
-    "prepublish": "npm run build"
+    "prepublishOnly": "npm run build"
   },
   "files": [
     "dist",
