@@ -1,25 +1,42 @@
-var supportedOperators = ['contains', 'does not contain', 'is', 'is not', 'is empty', 'is not empty', 'starts with', 'ends with'];
+var supportedOperators = [
+  'contains',
+  'does not contain',
+  'is',
+  'is not',
+  'is empty',
+  'is not empty',
+  'starts with',
+  'ends with',
+];
 
 // { $in: [null, ''] }
 function isIsEmptyQuery(query) {
-  const keys = Object.keys(query); 
+  const keys = Object.keys(query);
   if (keys.length !== 1) {
     return false;
   }
   const inValues = query.$in;
-  return Array.isArray(inValues) && inValues.length === 2 && 
-    inValues.indexOf(null) >= 0 && inValues.indexOf('') >= 0;
+  return (
+    Array.isArray(inValues) &&
+    inValues.length === 2 &&
+    inValues.indexOf(null) >= 0 &&
+    inValues.indexOf('') >= 0
+  );
 }
 
 // { $exists: true, $nin: [null, ''] }
 function isIsNotEmptyQuery(query) {
-  const keys = Object.keys(query);  
+  const keys = Object.keys(query);
   if (keys.length !== 2 || !query.$exists) {
     return false;
   }
   const ninValues = query.$nin;
-  return Array.isArray(ninValues) && ninValues.length === 2 && 
-    ninValues.indexOf(null) >= 0 && ninValues.indexOf('') >= 0;
+  return (
+    Array.isArray(ninValues) &&
+    ninValues.length === 2 &&
+    ninValues.indexOf(null) >= 0 &&
+    ninValues.indexOf('') >= 0
+  );
 }
 
 /**
@@ -33,46 +50,46 @@ function create(operator, value) {
     // Assume case-insensitive
     return {
       $regex: `^${escapeRegex(value)}$`,
-      $options: 'i'
+      $options: 'i',
     };
   } else if (operator === 'is not') {
     // Assume case-insensitive
     return {
       $not: {
         $regex: `^${escapeRegex(value)}$`,
-        $options: 'i'
-      }
+        $options: 'i',
+      },
     };
   } else if (operator === 'contains') {
     return {
       $regex: escapeRegex(value),
-      $options: 'i'
+      $options: 'i',
     };
   } else if (operator === 'does not contain') {
     return {
       $not: {
         $regex: escapeRegex(value),
-        $options: 'i'
-      }
+        $options: 'i',
+      },
     };
   } else if (operator === 'starts with') {
     return {
       $regex: `^${escapeRegex(value)}`,
-      $options: 'i'
+      $options: 'i',
     };
   } else if (operator === 'ends with') {
     return {
       $regex: `${escapeRegex(value)}$`,
-      $options: 'i'
+      $options: 'i',
     };
   } else if (operator === 'is empty') {
     return {
-      $in: [null, '']   
+      $in: [null, ''],
     };
   } else if (operator === 'is not empty') {
     return {
-      $exists: true, 
-      $nin: [null, '']
+      $exists: true,
+      $nin: [null, ''],
     };
   }
 }
@@ -83,12 +100,22 @@ function create(operator, value) {
 function parse(query) {
   if ('$regex' in query && matchesBeginning(query.$regex) && matchesEnd(query.$regex)) {
     return { operator: 'is', value: unescapeRegex(query.$regex.slice(1, query.$regex.length - 1)) };
-  } else if ('$not' in query && matchesBeginning(query.$not.$regex) && matchesEnd(query.$not.$regex)) {
-    return { operator: 'is not', value: unescapeRegex(query.$not.$regex.slice(1, query.$not.$regex.length - 1)) };
+  } else if (
+    '$not' in query &&
+    matchesBeginning(query.$not.$regex) &&
+    matchesEnd(query.$not.$regex)
+  ) {
+    return {
+      operator: 'is not',
+      value: unescapeRegex(query.$not.$regex.slice(1, query.$not.$regex.length - 1)),
+    };
   } else if ('$regex' in query && matchesBeginning(query.$regex)) {
     return { operator: 'starts with', value: unescapeRegex(query.$regex.slice(1)) };
   } else if ('$regex' in query && matchesEnd(query.$regex)) {
-    return { operator: 'ends with', value: unescapeRegex(query.$regex.slice(0, query.$regex.length - 1)) };
+    return {
+      operator: 'ends with',
+      value: unescapeRegex(query.$regex.slice(0, query.$regex.length - 1)),
+    };
   } else if ('$regex' in query) {
     return { operator: 'contains', value: unescapeRegex(query.$regex) };
   } else if ('$not' in query) {
@@ -121,13 +148,15 @@ function matchesEnd(regexStr) {
 var charsToEscape = ['|', '\\', '{', '}', '(', ')', '[', ']', '^', '$', '+', '*', '?', '.'];
 
 function escapeRegex(str) {
-  var escapedChars = charsToEscape.map(char => `\\${char}`);
+  var escapedChars = charsToEscape.map((char) => `\\${char}`);
   return str.replace(new RegExp(`(${escapedChars.join('|')})`, 'g'), '\\$&');
 }
 
 function unescapeRegex(regexStr) {
-  var escapedChars = charsToEscape.map(char => `\\\\\\${char}`);
-  return regexStr.replace(new RegExp(`(${escapedChars.join('|')})`, 'g'), match => match.slice(1));
+  var escapedChars = charsToEscape.map((char) => `\\\\\\${char}`);
+  return regexStr.replace(new RegExp(`(${escapedChars.join('|')})`, 'g'), (match) =>
+    match.slice(1)
+  );
 }
 
 module.exports = { create, parse, supportedOperators };

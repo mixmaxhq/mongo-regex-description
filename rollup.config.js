@@ -8,19 +8,20 @@ export default {
     babel({
       presets: [
         [
-          'es2015', {
-            modules: false
-          }
-        ]
+          'es2015',
+          {
+            modules: false,
+          },
+        ],
       ],
-      plugins: [
-        'external-helpers'
-      ],
-      exclude: ['node_modules/**']
-    })
+      plugins: ['external-helpers'],
+      exclude: ['node_modules/**'],
+    }),
   ],
-  targets: [{
-    format: 'cjs',
-    dest: pkg['browser']
-  }]
+  targets: [
+    {
+      format: 'cjs',
+      dest: pkg['browser'],
+    },
+  ],
 };
