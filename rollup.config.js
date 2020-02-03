@@ -1,4 +1,3 @@
-/* jshint node:true */
 import babel from 'rollup-plugin-babel';
 
 var pkg = require('./package.json');

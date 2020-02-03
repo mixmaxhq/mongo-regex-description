@@ -1,6 +1,4 @@
 'use strict';
-/* globals describe, it, expect */
-/* jshint -W030 */
 
 const regexDescription = require('../../src');
 

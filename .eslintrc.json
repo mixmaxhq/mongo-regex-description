@@ -1,0 +1,11 @@
+{
+  "extends": ["mixmax/node/withJest"],
+  "overrides": [
+    {
+      "files": ["rollup.config.js"],
+      "parserOptions": {
+        "sourceType": "module"
+      }
+    }
+  ]
+}
