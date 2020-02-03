@@ -44,54 +44,56 @@ function isIsNotEmptyQuery(query) {
  * See readme for supported values.
  */
 function create(operator, value) {
-  if (supportedOperators.indexOf(operator) < 0) throw new Error(`Unknown operator ${operator}`);
-
-  if (operator === 'is') {
-    // Assume case-insensitive
-    return {
-      $regex: `^${escapeRegex(value)}$`,
-      $options: 'i',
-    };
-  } else if (operator === 'is not') {
-    // Assume case-insensitive
-    return {
-      $not: {
-        $regex: `^${escapeRegex(value)}$`,
-        $options: 'i',
-      },
-    };
-  } else if (operator === 'contains') {
-    return {
-      $regex: escapeRegex(value),
-      $options: 'i',
-    };
-  } else if (operator === 'does not contain') {
-    return {
-      $not: {
-        $regex: escapeRegex(value),
-        $options: 'i',
-      },
-    };
-  } else if (operator === 'starts with') {
-    return {
-      $regex: `^${escapeRegex(value)}`,
-      $options: 'i',
-    };
-  } else if (operator === 'ends with') {
-    return {
-      $regex: `${escapeRegex(value)}$`,
-      $options: 'i',
-    };
-  } else if (operator === 'is empty') {
-    return {
-      $in: [null, ''],
-    };
-  } else if (operator === 'is not empty') {
-    return {
-      $exists: true,
-      $nin: [null, ''],
-    };
+  if (supportedOperators.includes(operator)) {
+    switch (operator) {
+      case 'is':
+        // Assume case-insensitive
+        return {
+          $regex: `^${escapeRegex(value)}$`,
+          $options: 'i',
+        };
+      case 'is not':
+        // Assume case-insensitive
+        return {
+          $not: {
+            $regex: `^${escapeRegex(value)}$`,
+            $options: 'i',
+          },
+        };
+      case 'contains':
+        return {
+          $regex: escapeRegex(value),
+          $options: 'i',
+        };
+      case 'does not contain':
+        return {
+          $not: {
+            $regex: escapeRegex(value),
+            $options: 'i',
+          },
+        };
+      case 'starts with':
+        return {
+          $regex: `^${escapeRegex(value)}`,
+          $options: 'i',
+        };
+      case 'ends with':
+        return {
+          $regex: `${escapeRegex(value)}$`,
+          $options: 'i',
+        };
+      case 'is empty':
+        return {
+          $in: [null, ''],
+        };
+      case 'is not empty':
+        return {
+          $exists: true,
+          $nin: [null, ''],
+        };
+    }
   }
+  throw new Error(`Unknown operator ${operator}`);
 }
 
 /**
