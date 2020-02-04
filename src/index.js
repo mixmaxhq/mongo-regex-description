@@ -1,4 +1,4 @@
-var supportedOperators = [
+const supportedOperators = [
   'contains',
   'does not contain',
   'is',
@@ -147,15 +147,15 @@ function matchesEnd(regexStr) {
 }
 
 // Copied from https://github.com/sindresorhus/escape-string-regexp/blob/master/index.js
-var charsToEscape = ['|', '\\', '{', '}', '(', ')', '[', ']', '^', '$', '+', '*', '?', '.'];
+const charsToEscape = ['|', '\\', '{', '}', '(', ')', '[', ']', '^', '$', '+', '*', '?', '.'];
 
 function escapeRegex(str) {
-  var escapedChars = charsToEscape.map((char) => `\\${char}`);
+  const escapedChars = charsToEscape.map((char) => `\\${char}`);
   return str.replace(new RegExp(`(${escapedChars.join('|')})`, 'g'), '\\$&');
 }
 
 function unescapeRegex(regexStr) {
-  var escapedChars = charsToEscape.map((char) => `\\\\\\${char}`);
+  const escapedChars = charsToEscape.map((char) => `\\\\\\${char}`);
   return regexStr.replace(new RegExp(`(${escapedChars.join('|')})`, 'g'), (match) =>
     match.slice(1)
   );
