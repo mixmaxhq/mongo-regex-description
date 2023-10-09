@@ -33,7 +33,7 @@
   },
   "homepage": "https://github.com/mixmaxhq/mongo-regex-description#readme",
   "devDependencies": {
-    "@mixmaxhq/prettier-config": "^1.0.0",
+    "@mixmaxhq/prettier-config": "^1.1.0",
     "babel-plugin-external-helpers": "^6.18.0",
     "babel-preset-es2015": "^6.18.0",
     "eslint": "^6.8.0",
